@@ -1,0 +1,28 @@
+{
+  "name": "tre-showcontrol",
+  "version": "1.0.0",
+  "description": "Shut down system if a certain IP does not respond to pings anymore",
+  "main": "index.js",
+  "bin": {
+    "tre-showcontrol": "index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "tre"
+  ],
+  "author": "Jan Bölsche <jan@lagomorph.de> (https://regular.codes/)",
+  "license": "AGPL-3.0-or-later",
+  "dependencies": {
+    "debug": "^4.1.1",
+    "my-local-ip": "^1.0.0",
+    "my-local-netmask": "^1.0.0",
+    "netmask": "^1.0.6",
+    "rc": "^1.2.8",
+    "tre-track-stations": "^1.0.1"
+  },
+  "devDependencies": {
+    "tape": "^4.11.0"
+  }
+}
