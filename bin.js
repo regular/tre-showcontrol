@@ -5,7 +5,7 @@ const config = require('rc')('tre-showcontrol', {
   secondsBetweenPings: 5,
   minFailedPings: 10,
   pingTimeoutSeconds: 5,
-  shutdownCommand: 'sudo systemctl poweroff -i'
+  shutdownCommand: 'systemctl poweroff -i'
 })
 
 console.log(JSON.stringify(config, null, 2))

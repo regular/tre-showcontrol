@@ -16,6 +16,21 @@ in with lib; {
   config = let
     #treOpts = "--socketPath ${cfg.socket-path} --debounce ${builtins.toString cfg.debounce}";
   in mkIf cfg.enable {
+    users.users.poweroff-user = {
+      isSystemUser = true;
+      group = "poweroff-user";
+    };
+
+    users.groups.poweroff-user = {};
+
+    security.polkit.extraConfig = ''
+      polkit.addRule(function(action, subject) {
+        if (action.id == "org.freedesktop.login1.power-off" &&
+            subject.user == "poweroff-user") {
+          return polkit.Result.YES;
+        }
+      });
+    '';
     
     systemd.services.tre-showcontrol = {
       description = "Shut down system if a certain IP does not respond to pings anymore";
@@ -34,12 +49,12 @@ in with lib; {
         StandardError = "journal";
         #ProtectSystem = "strict";
         
-        DynamicUser = true;
+        User = "poweroff-user";
         ReadPaths = [ 
           "/etc/tre-station"
         ];
         Environment = [
-          "DEBUG=tre-showcontrol:bin"
+          "DEBUG=monitor"
           "DEBUG_HIDE_DATE=1"
         ];
       };
