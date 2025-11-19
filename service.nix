@@ -22,16 +22,14 @@ in with lib; {
     };
 
     users.groups.poweroff-user = {};
-
-    security.polkit.extraConfig = ''
-      polkit.addRule(function(action, subject) {
-        if (action.id == "org.freedesktop.login1.power-off" &&
-            subject.user == "poweroff-user") {
-          return polkit.Result.YES;
-        }
-      });
-    '';
-    
+      security.polkit.extraConfig = ''
+        polkit.addRule(function(action, subject) {
+          if (action.id.indexOf("org.freedesktop.login1.power-off") == 0 &&
+              subject.user == "poweroff-user") {
+            return polkit.Result.YES;
+          }
+        });
+      '';
     systemd.services.tre-showcontrol = {
       description = "Shut down system if a certain IP does not respond to pings anymore";
       after = [ 
