@@ -1,10 +1,10 @@
 {
   "name": "tre-showcontrol",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Shut down system if a certain IP does not respond to pings anymore",
   "main": "index.js",
   "bin": {
-    "tre-showcontrol": "index.js"
+    "tre-showcontrol": "bin.js"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -19,8 +19,7 @@
     "my-local-ip": "^1.0.0",
     "my-local-netmask": "^1.0.0",
     "netmask": "^1.0.6",
-    "rc": "^1.2.8",
-    "tre-track-stations": "^1.1.0"
+    "rc": "^1.2.8"
   },
   "devDependencies": {
     "tape": "^4.11.0"

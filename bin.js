@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+require('./extra-modules-path')
 
 const config = require('rc')('tre-showcontrol', {
   secondsBeforePinging: 15,
@@ -16,13 +16,8 @@ let abort
 if (config.monitorIP) {
   start(config.monitorIP, config)
 } else {
-  console.log('Tracking station for show-control-ip')
-  require('tre-track-stations/bin')( kvm => {
-    console.log(kvm)
-    const content = kvm && kvm.value && kvm.value.content
-    const monitorIP = content && content['show-control-ip']
-    start(monitorIP, config)
-  })
+  console.error('missing --monitorIP')
+  process.exit(1)
 }
 
 function start(monitorIP, config) {
