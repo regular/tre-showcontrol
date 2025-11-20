@@ -39,7 +39,7 @@ in with lib; {
       wantedBy = [ "multi-user.target" ];
       pathConfig = {
         PathChanged = inputPath;
-        Unit = "${unitName}-reload";
+        Unit = "${unitName}-reload.service";
       };
     };
 
