@@ -1,5 +1,9 @@
 self: { config, lib, pkgs, ... }: let
   cfg = config.services.tre-showcontrol;
+  inputDir = "/etc/tre-station";
+  inputFile = "content.json";
+  inputPath = "${inputDir}/${inputFile}";
+  unitName = "tre-showcontrol";
 in with lib; {
   options.services.tre-showcontrol = {
     enable = mkEnableOption  "Shut down system if a certain IP does not respond to pings anymore";
@@ -30,17 +34,40 @@ in with lib; {
           }
         });
       '';
-    systemd.services.tre-showcontrol = {
+
+    systemd.paths."${unitName}-watcher" = {
+      wantedBy = [ "multi-user.target" ];
+      pathConfig = {
+        PathChanged = inputPath;
+        Unit = "${unitName}-reload";
+      };
+    };
+
+    systemd.services."${unitName}-reload" = {
+      description = "Reload or restart ${unitName} when ${inputPath} changed.";
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${pkgs.systemd}/bin/systemctl try-reload-or-restart ${unitName}.service";
+        Restart = "never";
+        StandardOutput = "journal";
+        StandardError = "journal";
+        ProtectSystem = "strict";
+      };
+    };
+
+    systemd.services.${unitName} = {
       description = "Shut down system if a certain IP does not respond to pings anymore";
-      after = [ 
-        "tre-track-station.service"
-      ];
+      after = [ "tre-track-station.service" ];
       requires = [ "tre-track-station.service"];
       wantedBy = [ "multi-user.target" ];
 
+      unitConfig = {
+        ConditionPathExists = inputPath;
+      };
+
       serviceConfig = {
         Type = "simple";
-        ExecStart = "${pkgs.bash}/bin/bash -c '${cfg.package}/bin/tre-showcontrol --monitorIP=$(${pkgs.jq}/bin/jq -r \\'.\"show-control-ip\"\\' < /etc/tre-station/content.json)'";
+        ExecStart = "${pkgs.bash}/bin/bash -c '${cfg.package}/bin/tre-showcontrol --monitorIP=$(${pkgs.jq}/bin/jq -r \\'.\"show-control-ip\"\\' < ${inputPath})'";
         Restart = "always";
         WorkingDirectory = "/tmp";
         StandardOutput = "journal";
@@ -49,7 +76,7 @@ in with lib; {
         
         User = "poweroff-user";
         ReadPaths = [ 
-          "/etc/tre-station"
+          inputDir
         ];
         Environment = [
           "DEBUG=monitor"
