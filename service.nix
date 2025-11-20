@@ -75,7 +75,7 @@ in with lib; {
         #ProtectSystem = "strict";
         
         User = "poweroff-user";
-        ReadPaths = [ 
+        ReadOnlyPaths = [ 
           inputDir
         ];
         Environment = [
