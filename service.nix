@@ -48,7 +48,7 @@ in with lib; {
       serviceConfig = {
         Type = "oneshot";
         ExecStart = "${pkgs.systemd}/bin/systemctl try-reload-or-restart ${unitName}.service";
-        Restart = "never";
+        #Restart = false;
         StandardOutput = "journal";
         StandardError = "journal";
         ProtectSystem = "strict";
