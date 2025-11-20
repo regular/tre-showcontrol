@@ -47,7 +47,7 @@ in with lib; {
       description = "Reload or restart ${unitName} when ${inputPath} changed.";
       serviceConfig = {
         Type = "oneshot";
-        ExecStart = "${pkgs.systemd}/bin/systemctl try-reload-or-restart ${unitName}.service";
+        ExecStart = "${pkgs.systemd}/bin/systemctl reload-or-restart ${unitName}.service";
         #Restart = false;
         StandardOutput = "journal";
         StandardError = "journal";
